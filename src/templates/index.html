@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkX - AI Social Media Post Generator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #212529;
+        }
+        .header {
+            background: linear-gradient(135deg, #0077B5 0%, #1DA1F2 100%);
+            color: white;
+            padding: 2rem 0;
+            border-radius: 0 0 15px 15px;
+            margin-bottom: 2rem;
+        }
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .platform-selector {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .platform-btn {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .platform-btn.active {
+            background-color: #f8f9fa;
+            border-color: #0d6efd;
+            color: #0d6efd;
+            font-weight: bold;
+        }
+        .platform-btn:hover:not(.active) {
+            background-color: #e9ecef;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #0077B5 0%, #1DA1F2 100%);
+            border: none;
+        }
+        .btn-publish {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: none;
+            color: white;
+        }
+        .result-card {
+            display: none;
+            margin-top: 2rem;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 2rem 0;
+        }
+        .loading-spinner {
+            width: 3rem;
+            height: 3rem;
+        }
+        .copy-btn {
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 0.25rem;
+            transition: all 0.2s;
+        }
+        .copy-btn:hover {
+            background-color: #e9ecef;
+        }
+        .emoji-selector {
+            margin-bottom: 1rem;
+        }
+        .emoji-btn {
+            padding: 0.25rem 0.5rem;
+            margin: 0.25rem;
+            cursor: pointer;
+            border-radius: 4px;
+            border: 1px solid #dee2e6;
+            background-color: white;
+            transition: all 0.2s;
+        }
+        .emoji-btn:hover {
+            background-color: #f8f9fa;
+        }
+        .hashtag-pill {
+            display: inline-block;
+            padding: 0.35em 0.65em;
+            font-size: 0.85em;
+            font-weight: 700;
+            color: #fff;
+            background-color: #0d6efd;
+            border-radius: 50rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .hashtag-pill:hover {
+            background-color: #0b5ed7;
+        }
+
+        /* ADK Badge Styles */
+        .badge.bg-primary svg {
+            margin-right: 3px;
+        }
+        #sentiment.badge {
+            font-size: 90%;
+            padding: 0.35em 0.65em;
+        }
+    </style>
+</head>
+<body>
+    <div class="header text-center">
+        <h1><span class="fw-bold">LinkX</span> <span class="fs-4">AI Social Media Post Generator</span></h1>
+        <p class="lead">Create viral LinkedIn & Twitter posts with Google's AI</p>
+    </div>
+
+    <div class="container">
+        <!-- Form Card -->
+        <div class="card mb-4 p-4">
+            <div class="card-body">
+                <h2 class="card-title mb-4">Generate Your Post</h2>
+                
+                <!-- Platform Selector -->
+                <div class="platform-selector">
+                    <div class="platform-btn active" data-platform="linkedin">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#0077B5" class="bi bi-linkedin" viewBox="0 0 16 16">
+                          <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/>
+                        </svg>
+                        <div class="mt-2">LinkedIn</div>
+                    </div>
+                    <div class="platform-btn" data-platform="twitter">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#1DA1F2" class="bi bi-twitter-x" viewBox="0 0 16 16">
+                          <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865l8.875 11.633Z"/>
+                        </svg>
+                        <div class="mt-2">Twitter (X)</div>
+                    </div>
+                </div>
+
+                <form id="postForm">
+                    <div class="mb-3">
+                        <label for="scenario" class="form-label">Scenario / Context</label>
+                        <textarea class="form-control" id="scenario" rows="2" placeholder="E.g., 'Launching a new SaaS product that helps small businesses automate customer support'"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="requirements" class="form-label">Content Requirements</label>
+                        <textarea class="form-control" id="requirements" rows="2" placeholder="E.g., 'Highlight problem-solution, include pricing details, mention 30-day free trial'"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="viralStrategy" class="form-label">Viral Strategy</label>
+                        <textarea class="form-control" id="viralStrategy" rows="2" placeholder="E.g., 'Use storytelling with a surprising twist, ask an engaging question, include an industry statistic'"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-2">Generate Post</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div class="loading" id="loading">
+            <div class="spinner-border loading-spinner text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3">Crafting your perfect post with AI...</p>
+        </div>
+
+        <!-- Results Card -->
+        <div class="card result-card" id="resultCard">
+            <div class="card-body">                <h2 class="card-title mb-3">
+                    Your Generated Post
+                    <span id="adkBadge" style="display:none" class="badge bg-primary ms-2 align-middle" title="Generated using Google ADK">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-robot" viewBox="0 0 16 16">
+                            <path d="M6 12.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5ZM3 8.062C3 6.76 4.235 5.765 5.53 5.886a26.58 26.58 0 0 0 4.94 0C11.765 5.765 13 6.76 13 8.062v1.157a.933.933 0 0 1-.765.935c-.845.147-2.34.346-4.235.346-1.895 0-3.39-.2-4.235-.346A.933.933 0 0 1 3 9.219V8.062Zm4.542-.827a.25.25 0 0 0-.217.068l-.92.9a24.767 24.767 0 0 1-1.871-.183.25.25 0 0 0-.068.495c.55.076 1.232.149 2.02.193a.25.25 0 0 0 .189-.071l.754-.736.847 1.71a.25.25 0 0 0 .404.062l.932-.97a25.286 25.286 0 0 0 1.922-.188.25.25 0 0 0-.068-.495c-.538.074-1.207.145-1.98.189a.25.25 0 0 0-.166.076l-.754.785-.842-1.7a.25.25 0 0 0-.182-.135Z"/>
+                            <path d="M8.5 1.866a1 1 0 1 0-1 0V3h-2A4.5 4.5 0 0 0 1 7.5V8a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1v1a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-1a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1v-.5A4.5 4.5 0 0 0 10.5 3h-2V1.866ZM14 7.5V13a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V7.5A3.5 3.5 0 0 1 5.5 4h5A3.5 3.5 0 0 1 14 7.5Z"/>
+                        </svg>
+                        ADK
+                    </span>
+                </h2>
+
+                <div class="mb-4">
+                    <h5 class="card-subtitle text-muted mb-2">Content</h5>
+                    <div class="p-3 bg-light rounded">
+                        <div id="postContent" class="mb-2"></div>
+                        <div class="d-flex justify-content-end">
+                            <button class="copy-btn" id="copyContent">Copy</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <h5 class="card-subtitle text-muted mb-2">Hashtags</h5>
+                    <div id="hashtagsContainer"></div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <h5 class="card-subtitle text-muted mb-2">Best Time to Post</h5>
+                        <p id="postingTime" class="mb-0"></p>
+                    </div>
+                    <div class="col-md-4">
+                        <h5 class="card-subtitle text-muted mb-2">Target Audience</h5>
+                        <p id="targetAudience" class="mb-0"></p>
+                    </div>
+                    <div class="col-md-4">
+                        <h5 class="card-subtitle text-muted mb-2">Engagement Strategy</h5>
+                        <p id="engagementStrategy" class="mb-0"></p>
+                    </div>
+                </div>
+
+                <!-- Sentiment Analysis Section -->
+                <div id="sentimentSection" class="card mb-4 p-3 bg-light" style="display:none">
+                    <h5 class="card-subtitle mb-3">Content Analysis</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Sentiment:</strong> <span id="sentiment" class="badge"></span></p>
+                            <p><strong>Tone:</strong> <span id="tone"></span></p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Recommendations:</strong></p>
+                            <div id="recommendations"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="publishBtn" class="btn btn-publish w-100 py-2">Publish to <span id="platformName">LinkedIn</span></button>
+                <div class="text-center mt-2">
+                    <small class="text-muted">Note: You need to configure API credentials in .env file to enable publishing</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Platform selection
+            const platformBtns = document.querySelectorAll('.platform-btn');
+            let selectedPlatform = 'linkedin';
+            
+            platformBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    platformBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    selectedPlatform = this.getAttribute('data-platform');
+                    document.getElementById('platformName').textContent = selectedPlatform === 'linkedin' ? 'LinkedIn' : 'Twitter (X)';
+                });
+            });
+            
+            // Form submission
+            document.getElementById('postForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const scenario = document.getElementById('scenario').value;
+                const requirements = document.getElementById('requirements').value;
+                const viralStrategy = document.getElementById('viralStrategy').value;
+                
+                if (!scenario || !requirements || !viralStrategy) {
+                    alert('Please fill in all fields');
+                    return;
+                }
+                
+                // Show loading
+                document.getElementById('loading').style.display = 'block';
+                document.getElementById('resultCard').style.display = 'none';
+                
+                try {
+                    const response = await fetch('/generate', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            platform: selectedPlatform,
+                            scenario: scenario,
+                            requirements: requirements,
+                            viral_strategy: viralStrategy
+                        }),
+                    });
+                    
+                    const result = await response.json();
+                    
+                    // Hide loading
+                    document.getElementById('loading').style.display = 'none';
+                      // Show results
+                    document.getElementById('resultCard').style.display = 'block';
+                    document.getElementById('postContent').textContent = result.post_content;
+                    
+                    // Show ADK badge if used
+                    const adkBadge = document.getElementById('adkBadge');
+                    if (result.generated_with === 'ADK') {
+                        adkBadge.style.display = 'inline-flex';
+                    } else {
+                        adkBadge.style.display = 'none';
+                    }
+                    
+                    // Display hashtags
+                    const hashtagsContainer = document.getElementById('hashtagsContainer');
+                    hashtagsContainer.innerHTML = '';
+                    
+                    if (result.hashtags && result.hashtags.length > 0) {
+                        result.hashtags.forEach(hashtag => {
+                            const pill = document.createElement('span');
+                            pill.classList.add('hashtag-pill');
+                            pill.textContent = hashtag.startsWith('#') ? hashtag : `#${hashtag}`;
+                            pill.addEventListener('click', function() {
+                                const postContent = document.getElementById('postContent');
+                                postContent.textContent = postContent.textContent + ' ' + this.textContent;
+                            });
+                            hashtagsContainer.appendChild(pill);
+                        });
+                    } else {
+                        hashtagsContainer.textContent = 'No hashtags provided';
+                    }
+                      document.getElementById('postingTime').textContent = result.posting_time || 'Not specified';
+                    document.getElementById('targetAudience').textContent = result.target_audience || 'Not specified';
+                    document.getElementById('engagementStrategy').textContent = result.engagement_strategy || 'Not specified';
+                    
+                    // Display sentiment analysis if available
+                    const sentimentSection = document.getElementById('sentimentSection');
+                    if (result.sentiment_analysis) {
+                        sentimentSection.style.display = 'block';
+                        
+                        const sentimentEl = document.getElementById('sentiment');
+                        const toneEl = document.getElementById('tone');
+                        const recommendationsEl = document.getElementById('recommendations');
+                        
+                        sentimentEl.textContent = result.sentiment_analysis.sentiment || 'Not analyzed';
+                        toneEl.textContent = result.sentiment_analysis.tone || 'Not analyzed';
+                        
+                        // Update sentiment pill color
+                        sentimentEl.className = 'badge';
+                        if (result.sentiment_analysis.sentiment === 'positive') {
+                            sentimentEl.classList.add('bg-success');
+                        } else if (result.sentiment_analysis.sentiment === 'negative') {
+                            sentimentEl.classList.add('bg-danger');
+                        } else {
+                            sentimentEl.classList.add('bg-secondary');
+                        }
+                        
+                        // Update recommendations
+                        recommendationsEl.innerHTML = '';
+                        if (result.sentiment_analysis.recommendations && 
+                            result.sentiment_analysis.recommendations.length > 0) {
+                            const ul = document.createElement('ul');
+                            result.sentiment_analysis.recommendations.forEach(rec => {
+                                const li = document.createElement('li');
+                                li.textContent = rec;
+                                ul.appendChild(li);
+                            });
+                            recommendationsEl.appendChild(ul);
+                        } else {
+                            recommendationsEl.textContent = 'No recommendations';
+                        }
+                    } else {
+                        sentimentSection.style.display = 'none';
+                    }
+                    
+                } catch (error) {
+                    console.error('Error:', error);
+                    document.getElementById('loading').style.display = 'none';
+                    alert('An error occurred while generating your post. Please try again.');
+                }
+            });
+            
+            // Copy button functionality
+            document.getElementById('copyContent').addEventListener('click', function() {
+                const content = document.getElementById('postContent').textContent;
+                navigator.clipboard.writeText(content).then(() => {
+                    this.textContent = 'Copied!';
+                    setTimeout(() => {
+                        this.textContent = 'Copy';
+                    }, 2000);
+                });
+            });
+            
+            // Publish button functionality
+            document.getElementById('publishBtn').addEventListener('click', async function() {
+                const content = document.getElementById('postContent').textContent;
+                
+                if (!content) {
+                    alert('No content to publish!');
+                    return;
+                }
+                
+                try {
+                    const response = await fetch('/publish', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            platform: selectedPlatform,
+                            content: content
+                        }),
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        alert('Successfully published to ' + (selectedPlatform === 'linkedin' ? 'LinkedIn' : 'Twitter (X)'));
+                    } else {
+                        alert('Failed to publish: ' + result.message);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred while publishing. Please check if API credentials are configured correctly.');
+                }
+            });
+        });
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
