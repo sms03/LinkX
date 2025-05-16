@@ -4,25 +4,31 @@
 
 ## Overview
 
-LinkX is an AI-powered agent that creates engaging and viral social media posts for LinkedIn and Twitter (X). The application uses Google's Agent Development Kit (ADK) to generate high-quality, platform-specific content based on user inputs.
+LinkX is an advanced AI-powered agent that creates engaging and viral social media posts for LinkedIn and Twitter (X). The application combines Google's Agent Development Kit (ADK), LangChain, and Groq to generate high-quality, platform-specific content based on user inputs.
 
 ## Features
 
-- **ADK-Powered Post Generation:** Create professional LinkedIn posts and concise Twitter messages using Google's Agent Development Kit (ADK) and state-of-the-art AI models.
-- **Custom AI Tools:** Leverage custom ADK tools for hashtag analysis and optimal posting time suggestions.
-- **Platform-Specific Optimization:** Content is tailored specifically for each platform's audience, character limits, and best practices.
-- **Viral Strategies:** Incorporate proven viral content strategies including storytelling, questions, statistics, and more.
-- **Publishing Integration:** Optionally publish directly to LinkedIn and Twitter with API integration.
-- **Content Enhancement:** Get recommendations for hashtags, best posting times, and engagement strategies.
-- **User-Friendly Interface:** Simple web UI makes it easy to generate and manage social media content.
-- **Fallback Mechanism:** Automatically switches to legacy method if ADK is unavailable.
+- **Multi-AI Powered Generation:** Create professional social media content using:
+  - **Google's Agent Development Kit (ADK)** for structured, tool-based generation
+  - **LangChain + Groq** integration for enhanced content creation and optimization
+- **Custom AI Tools:** Leverage specialized tools for hashtag analysis, posting time suggestions, and sentiment analysis
+- **Platform-Specific Optimization:** Content tailored specifically for each platform's audience, character limits, and best practices
+- **Multiple User Interfaces:**
+  - **Flask** web application (original)
+  - **Streamlit** interface (modern, data-focused UI)
+  - **Reflex** interface (reactive, component-based UI)
+- **Advanced Viral Strategies:** Incorporate proven viral content techniques with platform-specific recommendations
+- **Competitor Analysis:** Analyze top-performing posts in your industry for strategic insights
+- **Enhanced Content Analysis:** Get detailed feedback on emotional triggers, virality scoring, and optimization suggestions
+- **Multiple Publishing Options:** Push your content directly to LinkedIn and Twitter (with API credentials)
+- **Intelligent Content Enhancement:** Get AI-suggested improvements to boost engagement
 
 ## Requirements
 
 - Python 3.8+
-- UV (Python package installer)
 - Google Generative AI API key (Gemini)
-- Google Agent Development Kit (ADK)
+- Google Agent Development Kit (ADK) 0.5.0+
+- Groq API key (for LangChain integration)
 - Twitter Developer API keys (optional, for posting to Twitter)
 - LinkedIn account credentials (optional, for posting to LinkedIn)
 
@@ -35,17 +41,39 @@ git clone https://github.com/yourusername/LinkX.git
 cd LinkX
 ```
 
-2. **Create and activate a virtual environment using UV:**
+2. **Run the setup script:**
 
 ```powershell
+python setup.py --ui streamlit --use-langchain
+```
+
+The setup script will:
+- Check Python version compatibility
+- Install all required dependencies
+- Configure environment variables and API keys
+- Set up the selected UI (streamlit, reflex, or flask)
+- Verify the installation
+
+3. **Alternative manual installation:**
+
+Create and activate a virtual environment:
+```powershell
+# Using venv
+python -m venv venv
+.\venv\Scripts\activate
+
+# Or using UV
 uv venv
 .\.venv\Scripts\activate
 ```
 
-3. **Install dependencies:**
-
+Install dependencies:
 ```powershell
-uv pip install -r requirements.txt
+# Using pip
+pip install -r requirements-enhanced.txt
+
+# Or using UV
+uv pip install -r requirements-enhanced.txt
 ```
 
 4. **Create a `.env` file:**
@@ -53,46 +81,101 @@ uv pip install -r requirements.txt
 Copy the `.env.example` file to `.env` and add your API keys:
 
 ```
-# Google Generative AI API Key
+# Google Generative AI API Key (Required)
 GOOGLE_API_KEY=your_google_api_key_here
 
-# Twitter (X) API Credentials
+# Groq API Key (For LangChain integration)
+GROQ_API_KEY=your_groq_api_key_here
+
+# Twitter (X) API Credentials (Optional, for direct publishing)
 TWITTER_API_KEY=your_twitter_api_key
 TWITTER_API_SECRET=your_twitter_api_secret_key
 TWITTER_ACCESS_TOKEN=your_twitter_access_token
 TWITTER_ACCESS_TOKEN_SECRET=your_twitter_access_token_secret
 
-# LinkedIn API Credentials
+# LinkedIn API Credentials (Optional, for direct publishing)
 LINKEDIN_EMAIL=your_linkedin_email
 LINKEDIN_PASSWORD=your_linkedin_password
+
+# Application Settings
+DEBUG=False
+ENABLE_ADK=True
+ENABLE_TWITTER=True
+ENABLE_LINKEDIN=True
 ```
 
-5. **Start the application:**
+## Running the Application
+
+You can run LinkX with different user interfaces:
+
+### Flask Interface (Original)
 
 ```powershell
-python .\src\app.py
+python run.py
 ```
-
 The application will be available at http://127.0.0.1:5000
+
+### Streamlit Interface (Modern, Data-focused)
+
+```powershell
+streamlit run streamlit_app.py
+```
+The application will be available at http://localhost:8501
+
+### Reflex Interface (Reactive, Component-based)
+
+```powershell
+# Initialize Reflex first if you haven't already
+reflex init
+
+# Run the Reflex app
+reflex run
+```
+The application will be available at http://localhost:3000
 
 ## Usage
 
-1. Open the application in your web browser
-2. Select the platform (LinkedIn or Twitter)
-3. Enter your scenario/context, content requirements, and viral strategy
-4. Click "Generate Post" to create your social media content
-5. Review the generated post, recommended hashtags, and engagement tips
-6. Optionally publish directly to the selected platform (requires API configuration)
+1. Open your preferred interface in a web browser
+2. Configure your API keys if not already set up
+3. Select the platform (LinkedIn or Twitter)
+4. Enter:
+   - Your scenario/context
+   - Content requirements (optional)
+   - Viral strategy selection
+   - Target audience (optional)
+   - Industry or niche (optional)
+5. Choose whether to use Google ADK, LangChain-Groq, or both
+6. Click "Generate Post" to create your social media content
+7. Review the generated post, along with:
+   - Recommended hashtags
+   - Optimal posting times
+   - Engagement strategies
+   - Sentiment analysis
+   - Virality score (LangChain-Groq)
+   - Emotional triggers used (LangChain-Groq)
+   - Optimization notes (LangChain-Groq)
+   - Alternative headline options (LangChain-Groq)
+8. Copy, edit, or directly publish your content
 
 ## Viral Strategies
 
-LinkX supports several viral content strategies:
+LinkX supports platform-specific viral content strategies:
 
-- **Storytelling:** Engage audiences with a compelling narrative structure
-- **Questions:** Spark curiosity and engagement with thought-provoking questions
-- **Statistics:** Use surprising or counter-intuitive data points to grab attention
-- **Controversy:** Take a thoughtful contrarian position on industry topics
-- **Listicles:** Create scannable, valuable lists of tips, strategies or insights
+### LinkedIn Strategies
+- **Storytelling:** Engage audiences with compelling professional narratives
+- **Practical Advice:** Share actionable insights and professional tips
+- **Data-Driven Insights:** Provide research-backed information and analysis
+- **Industry Trends:** Discuss cutting-edge developments in your field
+- **Question Hook:** Spark professional discussions with thought-provoking questions
+- **Inspirational Quote:** Share wisdom from industry leaders with your perspective
+
+### Twitter Strategies
+- **Controversial Take:** Challenge conventional wisdom with a fresh perspective
+- **Surprising Statistic:** Share unexpected data points that grab attention
+- **Hot Take:** Offer timely commentary on trending industry topics
+- **Engaging Question:** Ask questions that encourage audience participation
+- **Bold Prediction:** Make forward-looking statements about industry changes
+- **Industry Secret:** Share insider knowledge or little-known facts
 
 ## Getting API Keys
 
